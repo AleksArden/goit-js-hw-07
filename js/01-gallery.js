@@ -5,7 +5,7 @@ console.log(galleryItems);
 
 const listGalleryRef = document.querySelector(".gallery");
 
-const makeGalleryImages = (images) =>
+const makeGalleryMarkup = (images) =>
   images
     .map(
       ({
@@ -20,33 +20,28 @@ const makeGalleryImages = (images) =>
     /></a></div>`
     )
     .join("");
-const elements = makeGalleryImages(galleryItems);
+const elements = makeGalleryMarkup(galleryItems);
 listGalleryRef.insertAdjacentHTML("afterbegin", elements);
 listGalleryRef.addEventListener("click", onImageClick);
 
 function onImageClick(event) {
+  event.preventDefault();
   if (event.target.nodeName !== "IMG") {
     return;
   }
 
-  event.preventDefault();
-  event.target.src = event.target.dataset.source;
-
   const instance = basicLightbox.create(`
-    <img src="assets/images/image.png">
-`);
+      <img src="${event.target.dataset.source}">
+  `);
   instance.show();
-
-  const elem = instance.element();
-  const imgElemRef = elem.querySelector(" img");
-  imgElemRef.src = event.target.src;
 
   const visible = instance.visible();
   if (visible) {
     window.addEventListener("keydown", onEscape);
 
     function onEscape(event) {
-      if (event.code === "Escape") {
+      const isEscape = event.code === "Escape";
+      if (isEscape) {
         instance.close();
         window.removeEventListener("keydown", onEscape);
       }
