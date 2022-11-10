@@ -34,7 +34,7 @@ function onImageClick(event) {
       <img src="${event.target.dataset.source}">
   `);
   instance.show();
-
+  window.removeEventListener("keydown", onEscape);
   const visible = instance.visible();
   if (visible) {
     window.addEventListener("keydown", onEscape);
